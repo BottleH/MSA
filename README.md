@@ -111,3 +111,73 @@ Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Laye
 
 [Kafka 정리](/Kafka.md)
 
+
+
+### 3. Transaction in MSA
+
+___
+
+![Transaction](/Img/Transaction.png)
+
+❗ RuntimeException: 주로 프로그램 에러에 의해 발생하는 Exception
+
+- e.g: `NullPointException`, `IllegalArgumentException`…
+- Spring의Tranactional annotation은RuntimeException 기준
+
+
+
+#### 3-1. REST call, Publishing이 혼합된 Service Layer에서 Transaction 처리
+
+![Transaction2](/Img/Transaction2.png)
+
+**REST update 와 Q publish 전략필요** 
+
+- REST update는DB 다음에 처리 
+- Q를 제일 마지막에 처리 
+  - Compensation(보상) 최소화
+
+
+
+#### 3-2. Listener(Subscribe) 처리 고려사항
+
+![Subscribe처리](/Img/Subscribe처리.png)
+
+1. KafkaListener의 Ack 모드를 수동으로 지정
+
+```java
+ConcurrentKafkaListenerContainerFactory<String, Account> factory = new ConcurrentKafkaListenerContainerFactory<>(); 
+// Listener의 AckMode를 수동으로 지정
+factory.getContainerProperties().setAckMode(AckMode. MANUAL_IMMEDIATE );
+```
+
+2. 각 ConsumerFactory별 `ENABLE_AUTO_COMMIT_CONFIG = false` 속성추가
+
+```java
+props.put(ConsumerConfig. ENABLE_AUTO_COMMIT_CONFIG,"false");
+```
+
+
+
+### 4. API Composition
+
+___
+
+#### 기존
+
+![Api기존](/Img/Api기존.png)
+
+- 웹 브라우저에서 3개의 서비스를 호출해야 하며 Sequential한 호출로 인해 전체호출시간 증가
+
+#### API Composition
+
+![API_Composition](/Img/API_Composition.png)
+
+- 웹 브라우저에서API Composite Service하나만 호출 하고 API Composite에서 나머지 서비스들을 Thread를 이용해 Parallel 하게 호출
+  - 단, 업무의 성격상 순차 처리해야하는 경우는 제외
+
+
+
+### 5. CQRS
+
+___
+
