@@ -33,5 +33,73 @@ ___
 
 - 토픽 하나에 파티션이 여러개 있을 수 있음!
 
-**off-set**: 파티션 내에서 Record에 대한 고유한 식별자임, 데이터의 안정성을 보장해줌.
+**off-set**: 파티션 내에서 Record에 대한 고유한 식별자임.
 
+- 데이터의 안정성을 보장해줌.
+
+
+
+### 4. 설정
+
+___
+
+1. dependency 추가 
+   - `compile('org.springframework.kafka:spring-kafka')` 
+2. application.properties에 BootStrapAddress 추가(Kafka 서버 주소)
+3. `KafkaProducerConfig` 구현
+
+```java
+@Configuration
+public class KafkaProducerConfig {
+    @Value(value = "${kafka.bootstrapAddress}")
+    private String bootstrapAddress;
+
+    @Bean
+    public ProducerFactory<String, TransferHistory> transferProducerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate<String, TransferHistory> transferKafkaTemplate() {
+        return new KafkaTemplate<>(transferProducerFactory());
+    }
+}
+```
+
+4. **KafkaConsumerConfig** 구현
+
+```java
+@EnableKafka
+@Configuration
+public class KafkaConsumerConfig {
+    @Value(value = "${kafka.bootstrapAddress}")
+    private String bootstrapAddress;
+
+    public ConsumerFactory<String, TransferHistory> b2bTransferResultConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "b2btransfer");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false ");
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(TransferHistory.class, false));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, TransferHistory> b2bTransferResultKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TransferHistory> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(b2bTransferResultConsumerFactory());
+        factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE);
+        factory.setErrorHandler(new SeekToCurrentErrorHandler());
+        return factory;
+    }
+}
+```
+
+5. Producer, Consumer 클래스 구현
+
+**Producer는 데이터를 제공해야하므로 직렬화를 시켜 보내고, Consumer는 직렬화된 데이터를 다시 비직렬화시킴!**

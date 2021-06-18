@@ -21,11 +21,93 @@ ___
 
 
 
-### 2. Kafka
+### 2. 개발환경
 
 ___
 
-카프카(Apache Kafka)는 분산 스트리밍 플랫폼이며 데이터 파이프 라인을 만들 때 주로 사용되는 오픈소스 솔루션
+#### 2-1. Spring Cloud
+
+- Spring Cloud는 분산 시스템 상에서 공통된 개발 패턴을 통해 개발 효율을 제공해 주기 위해 개발
+- Spring Cloud를 통해 분산 시스템 상에서 필요한 여러 패턴들을 Boiler Plate(표준 문안 혹은 패턴)화 시켜 손쉽게 개발 할 수 있도록 지원
+
+**Spring Cloud 구성**
+
+- Distributed/versioned configuration
+- Service registration and discovery
+- Routing
+- Service-to-service calls
+- Load balancing
+- Circuit Breakers
+- Global locks
+- Leadership election and cluster state
+- Distrubuted Messaging
+
+![SpringCloud](/Img/SpringCloud.png)
+
+
+
+#### 2-2. Circuit Breaker - Hystrix
+
+- 서킷브레이커는 전기 기기에서 과부하나 과전류가 들어왔을 때 메인 기기를 보호하기 위해 흔히 쓰는 회로 차단기를 의미함.
+- 또한, 주가 등락 폭이 심하게 요동칠 때도 시장 과열을 방지하기 위해 서킷 브레이커를 가동해 거래를 중지 시킬때도 사용
+- **MSA에서 서킷브레이커는 특정MSA 서비스의 장애로 인해 다른 MSA 서비스에도 장애를 일으킬 수 있는 가능성을 방지하기 위해 사용**
+
+![Hystrix](/Img/Hystrix.png)
+
+[Hystrix 정리](/Hystrix .md)
+
+
+
+#### 2-3. Load Balancer – Ribbon Client
+
+Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Layer에서 Client Side Load Balacer 역할을 담당함. 최근 RestTemplate 대신 사용하는 FeignClient의 경우 이미 Ribbon 기능이 포함되어 있음.
+
+![Ribbon](/Img/Ribbon.png)
+
+[Ribbon_Client 정리](/Ribbon_Client .md)
+
+
+
+#### 2-4. Service Discovery – Eureka
+
+- MicrosService를 구성하는 서비스들의 목록과 위치(IP, Port)가 동적으로 변하는 환경 하에서 서비스들을 효율적으로 관리하기 위해 Netflix OSS 기반으로 개발한 Service Discovery Server와 Client
+- Java로 개발된 Netflix OSS 기반 라이브러리는 Spring Cloud의 Library와 통합되어 Spring Cloud – Eureka로 적용됨
+
+![Eureka](/Img/Eureka.png)
+
+[Eureka](/Eureka.md)
+
+
+
+#### 2-5. API Gateway – Spring Gateway
+
+- 다수의 서비스로 구성된 MicroService 들에서 각 서비스들의 IP와 PORT 번호들에 대한 단일화된 엔드포인트 제공
+- 각 서비스들에서 필요한 인증/인가, 사용량 제어, 요청/응답 변조 등의 기능을 대신 담당
+
+![Spring_Gateway](/Img/Spring_Gateway.png)
+
+[Spring_Gateway](/Spring_Gateway.md)
+
+
+
+#### 2-6. REST Call을위한 OpenFeign
+
+- REST Call을 위해 호출하는 클라이언트를 보다 쉽게 작성할 수 있도록 도와주는 라이브러리
+- OpenFeign은 동일한 기능을 하는 RestTemplate 대비 interface를 작성하고 annotation을 붙여주면 세부적인 내용 없이 사용할 수 있기 편리한 기능 제공
+- Timeout 같은 간단한 기능은 Hystrix 연동없이 실패에 대한 Callback 함수 구현 가능
+- spring-cloud-starter-openfeign 라이브러리 추가로 손쉽게 사용 가능
+
+![OpenFeign](/Img/OpenFeign.png)
+
+[OpenFeign](/OpenFeign.md)
+
+
+
+#### 2-7. Kafka
+
+- 카프카(Apache Kafka)는 분산 스트리밍 플랫폼이며 데이터 파이프 라인을 만들 때 주로 사용되는 오픈소스 솔루션
+
+![pubsub구조](/Img/pubsub구조.png)
 
 [Kafka 정리](/Kafka.md)
 
