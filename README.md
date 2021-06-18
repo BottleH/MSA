@@ -27,5 +27,5 @@ ___
 
 카프카(Apache Kafka)는 분산 스트리밍 플랫폼이며 데이터 파이프 라인을 만들 때 주로 사용되는 오픈소스 솔루션
 
-(Kafka 정리)[/Kafka.md]
+[Kafka 정리](/Kafka.md)
 
