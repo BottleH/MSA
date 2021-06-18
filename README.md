@@ -54,7 +54,7 @@ ___
 
 ![Hystrix](/Img/Hystrix.png)
 
-[Hystrix 정리](/Hystrix .md)
+[Hystrix 정리](/Hystrix.md)
 
 
 
@@ -64,7 +64,7 @@ Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Laye
 
 ![Ribbon](/Img/Ribbon.png)
 
-[Ribbon_Client 정리](/Ribbon_Client .md)
+[Ribbon_Client 정리](/Ribbon_Client.md)
 
 
 
@@ -75,7 +75,7 @@ Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Laye
 
 ![Eureka](/Img/Eureka.png)
 
-[Eureka](/Eureka.md)
+[Eureka 정리](/Eureka.md)
 
 
 
@@ -86,7 +86,7 @@ Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Laye
 
 ![Spring_Gateway](/Img/Spring_Gateway.png)
 
-[Spring_Gateway](/Spring_Gateway.md)
+[Spring_Gateway 정리](/Spring_Gateway.md)
 
 
 
@@ -99,7 +99,7 @@ Netflix OSS 라이브러리 중 Hardware적인Load Balancer를 대신해 L7 Laye
 
 ![OpenFeign](/Img/OpenFeign.png)
 
-[OpenFeign](/OpenFeign.md)
+[OpenFeign 정리](/OpenFeign.md)
 
 
 
